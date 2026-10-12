@@ -57,6 +57,10 @@ class Candidat implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255)]
     private ?string $password = null;
 
+    #[ORM\Column(length: 50, options: ['default' => 'ROLE_CANDIDAT'])]
+    #[Assert\Choice(choices: ['ROLE_CANDIDAT', 'ROLE_ENTREPRISE', 'ROLE_ADMIN'])]
+    private string $role = 'ROLE_CANDIDAT';
+
 
     /**
      * @var Collection<int, Candidature>
@@ -117,7 +121,19 @@ class Candidat implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getRoles(): array
     {
-        return ['ROLE_CANDIDAT'];
+        return [$this->role];
+    }
+
+    public function getRole(): string
+    {
+        return $this->role;
+    }
+
+    public function setRole(string $role): static
+    {
+        $this->role = $role;
+
+        return $this;
     }
 
     public function getPassword(): ?string
