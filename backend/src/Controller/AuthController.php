@@ -6,6 +6,7 @@ use App\Dto\RegisterCandidatRequest;
 use App\Entity\Candidat;
 use App\Repository\CandidatRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
@@ -41,6 +42,32 @@ final class AuthController extends AbstractController
         ], 201);
     }
 
+    #[OA\Post(
+        path: '/api/login',
+        summary: 'Authenticate a candidate and return a JWT.',
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(
+                required: ['email', 'password'],
+                properties: [
+                    new OA\Property(property: 'email', type: 'string', format: 'email'),
+                    new OA\Property(property: 'password', type: 'string', format: 'password'),
+                ]
+            )
+        ),
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'Authentication successful.',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: 'token', type: 'string'),
+                    ]
+                )
+            ),
+            new OA\Response(response: 401, description: 'Invalid credentials.'),
+        ]
+    )]
     #[Route('/api/login', name: 'api_login', methods: ['POST'])]
     public function loginCheck(): JsonResponse
     {
