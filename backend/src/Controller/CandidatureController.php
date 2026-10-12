@@ -66,6 +66,7 @@ final class CandidatureController extends AbstractController
         }
 
         $storedFilename = null;
+        $storedPath = null;
         if ($uploadedCv !== null) {
             if (!is_dir($cvDirectory) && !mkdir($cvDirectory, 0770, true) && !is_dir($cvDirectory)) {
                 throw new \RuntimeException(sprintf('Could not create CV storage directory "%s".', $cvDirectory));
@@ -82,7 +83,7 @@ final class CandidatureController extends AbstractController
         try {
             $entityManager->flush();
         } catch (\Throwable $exception) {
-            if ($storedFilename !== null && is_file($storedPath) && !unlink($storedPath)) {
+            if ($storedFilename !== null && $storedPath !== null && is_file($storedPath) && !unlink($storedPath)) {
                 throw new \RuntimeException('Could not remove the uploaded CV after the application failed to save.', previous: $exception);
             }
 
