@@ -34,7 +34,7 @@ class AppFixtures extends Fixture
         // Création d'un utilisateur classique
         $user = new Candidat();
         $user->setEmail("user@bookapi.com");
-        $user->setRole("ROLE_USER");
+        $user->setRole("ROLE_CANDIDAT");
         $user->setPassword($this->userPasswordHasher->hashPassword($user, "password"));
         $user->setNom("John");
         $user->setPrenom("Doe");
@@ -44,7 +44,7 @@ class AppFixtures extends Fixture
         for ($i = 0; $i < 5; $i++) {
             $userLoop = new Candidat();
             $userLoop->setEmail("user" . $i . "@bookapi.com");
-            $userLoop->setRole("ROLE_USER");
+            $userLoop->setRole("ROLE_ENTREPRISE");
             $userLoop->setPassword($this->userPasswordHasher->hashPassword($userLoop, "password"));
             $userLoop->setNom("First" . $i);
             $userLoop->setPrenom("Last" . $i);
