@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: AnnonceRepository::class)]
 class Annonce
@@ -17,15 +18,35 @@ class Annonce
     private ?int $id = null;
 
     #[ORM\Column(length: 150)]
+    #[Assert\NotBlank()]
+    #[Assert\Length(
+        min: 2,
+        minMessage: 'The title must be at least 2 characters long.',
+    )]
+    #[Assert\NoSuspiciousCharacters]
     private ?string $titre = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Assert\NoSuspiciousCharacters]
+    #[Assert\Length(
+        min: 10,
+        minMessage: 'The description must be at least 10 characters long.',
+    )]
     private ?string $description = null;
 
     #[ORM\Column(length: 150, nullable: true)]
+    #[Assert\NoSuspiciousCharacters]
+    #[Assert\Length(
+        min: 2,
+        minMessage: 'The location must be at least 2 characters long.',
+    )]
     private ?string $lieu = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2, nullable: true)]
+    #[Assert\Regex(
+        pattern: '/^\d+(\.\d+)?$/',
+        message: 'The salary must be a valid number.',
+    )]
     private ?string $salaire = null;
 
     /**
@@ -33,7 +54,7 @@ class Annonce
      */
     #[ORM\OneToMany(targetEntity: Candidature::class, mappedBy: 'idAnnonce')]
     private Collection $candidatures;
-
+    
     #[ORM\ManyToOne(inversedBy: 'annonces')]
     private ?Entreprise $idEntreprise = null;
 

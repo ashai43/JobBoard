@@ -6,8 +6,11 @@ use App\Repository\EntrepriseRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: EntrepriseRepository::class)]
+#[UniqueEntity('nom')]
 class Entreprise
 {
     #[ORM\Id]
@@ -16,9 +19,28 @@ class Entreprise
     private ?int $id = null;
 
     #[ORM\Column(length: 100)]
+    #[Assert\NotBlank()]
+    #[Assert\NoSuspiciousCharacters]
+    #[Assert\Regex(
+        pattern: '/^[a-zA-ZÀ-ÿ\- ]+$/',
+        message: 'Only letters are allowed in the name field.'
+    )]
+    #[Assert\Length(
+        min: 2,
+        minMessage: 'The name must be at least 2 characters long.',
+    )]
     private ?string $nom = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(length: 255)]
+    #[Assert\NoSuspiciousCharacters]
+    #[Assert\Regex(
+        pattern: '/^[\p{L}\p{M}\p{N}\p{P}\p{S}\p{Zs}]+$/u',
+        message: 'The address contains unsupported characters.'
+    )]
+    #[Assert\Length(
+        min: 2,
+        minMessage: 'The address must be at least 2 characters long.',
+    )]
     private ?string $adresse = null;
 
     /**

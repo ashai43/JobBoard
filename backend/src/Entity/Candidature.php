@@ -5,6 +5,8 @@ namespace App\Entity;
 use App\Repository\CandidatureRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CandidatureRepository::class)]
 class Candidature
@@ -15,16 +17,38 @@ class Candidature
     private ?int $id = null;
 
     #[ORM\Column]
+    #[Assert\GreaterThanOrEqual(value: 'today')]
+    #[Assert\NotNull()]
+    #[Assert\Type(\DateTime::class)]
     private ?\DateTime $date = null;
 
     #[ORM\Column(length: 50)]
+    #[Assert\NotBlank()]
+    #[Assert\Choice(
+        choices: ['pending', 'accepted', 'refused'],
+        message: 'Choose a valid status.'
+    )]
     private ?string $statut = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Assert\NoSuspiciousCharacters]
     private ?string $lettreMotivation = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\NoSuspiciousCharacters]
+    #[Assert\File(
+        maxSize: '1024k',
+        extensions: ['pdf'],
+        extensionsMessage: 'Please upload a valid PDF',
+    )]
     private ?string $cv = null;
+
+    #[Assert\File(
+        maxSize: '1024k',
+        extensions: ['pdf'],
+        extensionsMessage: 'Please upload a valid PDF',
+    )]
+    private ?UploadedFile $cvFile = null;
 
     #[ORM\ManyToOne(inversedBy: 'candidatures')]
     private ?Candidat $idCandidat = null;
@@ -81,6 +105,18 @@ class Candidature
     public function setCv(?string $cv): static
     {
         $this->cv = $cv;
+
+        return $this;
+    }
+
+    public function getCvFile(): ?UploadedFile
+    {
+        return $this->cvFile;
+    }
+
+    public function setCvFile(?UploadedFile $cvFile): static
+    {
+        $this->cvFile = $cvFile;
 
         return $this;
     }

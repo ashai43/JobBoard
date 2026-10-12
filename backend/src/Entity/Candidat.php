@@ -6,9 +6,14 @@ use App\Repository\CandidatRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CandidatRepository::class)]
-class Candidat
+#[UniqueEntity('email')]
+class Candidat implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -16,13 +21,42 @@ class Candidat
     private ?int $id = null;
 
     #[ORM\Column(length: 100)]
+    #[Assert\NotBlank()]
+    #[Assert\NoSuspiciousCharacters]
+    #[Assert\Regex(
+        pattern: '/^[a-zA-ZÀ-ÿ\- ]+$/',
+        message: 'Only letters are allowed in the name field.'
+    )]
+    #[Assert\Length(
+        min: 2,
+        minMessage: 'The name must be at least 2 characters long.',
+    )]
     private ?string $nom = null;
 
     #[ORM\Column(length: 100)]
+    #[Assert\NotBlank()]
+    #[Assert\NoSuspiciousCharacters]
+    #[Assert\Regex(
+        pattern: '/^[a-zA-ZÀ-ÿ\- ]+$/',
+        message: 'Only letters are allowed in the firstname field.'
+    )]
+    #[Assert\Length(
+        min: 2,
+        minMessage: 'The firstname must be at least 2 characters long.',
+    )]
     private ?string $prenom = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, unique: true)]
+    #[Assert\NotBlank()]
+    #[Assert\Email(
+        normalizer: 'trim'
+    )]
+    #[Assert\NoSuspiciousCharacters]
     private ?string $email = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $password = null;
+
 
     /**
      * @var Collection<int, Candidature>
@@ -74,6 +108,32 @@ class Candidat
         $this->email = $email;
 
         return $this;
+    }
+
+    public function getUserIdentifier(): string
+    {
+        return $this->email ?? throw new \LogicException('A candidate must have an email address.');
+    }
+
+    public function getRoles(): array
+    {
+        return ['ROLE_CANDIDAT'];
+    }
+
+    public function getPassword(): ?string
+    {
+        return $this->password;
+    }
+
+    public function setPassword(string $password): static
+    {
+        $this->password = $password;
+
+        return $this;
+    }
+
+    public function eraseCredentials(): void
+    {
     }
 
     /**
