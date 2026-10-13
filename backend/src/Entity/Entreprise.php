@@ -49,6 +49,10 @@ class Entreprise
     #[ORM\OneToMany(targetEntity: Annonce::class, mappedBy: 'idEntreprise')]
     private Collection $annonces;
 
+    #[ORM\OneToOne]
+    #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
+    private ?Candidat $compteCandidat = null;
+
     public function __construct()
     {
         $this->annonces = new ArrayCollection();
@@ -109,6 +113,18 @@ class Entreprise
                 $annonce->setIdEntreprise(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCompteCandidat(): ?Candidat
+    {
+        return $this->compteCandidat;
+    }
+
+    public function setCompteCandidat(?Candidat $compteCandidat): static
+    {
+        $this->compteCandidat = $compteCandidat;
 
         return $this;
     }

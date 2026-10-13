@@ -89,9 +89,39 @@ final class AuthControllerTest extends WebTestCase
             self::assertSame('alex.martin@example.test', $candidature->getIdCandidat()->getEmail());
             self::assertSame($annonce->getId(), $candidature->getIdAnnonce()->getId());
 
+            $client->request(
+                'GET',
+                '/candidatures',
+                server: ['HTTP_AUTHORIZATION' => 'Bearer '.$response['token']],
+            );
+            self::assertResponseIsSuccessful();
+            $listResponse = json_decode($client->getResponse()->getContent(), true, flags: JSON_THROW_ON_ERROR);
+            self::assertCount(1, $listResponse);
+            self::assertSame($candidature->getId(), $listResponse[0]['id']);
+
             $storedCvPath = dirname(__DIR__, 2).'/var/uploads/cv/'.$candidature->getCv();
             self::assertFileExists($storedCvPath);
             self::assertStringNotContainsString('/public/', str_replace('\\', '/', $storedCvPath));
+
+            $client->request(
+                'GET',
+                '/candidatures/'.$candidature->getId(),
+                server: ['HTTP_AUTHORIZATION' => 'Bearer '.$response['token']],
+            );
+            self::assertResponseIsSuccessful();
+            $detailResponse = json_decode($client->getResponse()->getContent(), true, flags: JSON_THROW_ON_ERROR);
+            self::assertSame($candidature->getId(), $detailResponse['id']);
+            self::assertSame($annonce->getId(), $detailResponse['annonce']['id']);
+            self::assertTrue($detailResponse['cvUploaded']);
+
+            $client->request(
+                'DELETE',
+                '/annonce/'.$annonce->getId().'/candidatures/'.$candidature->getId(),
+                server: ['HTTP_AUTHORIZATION' => 'Bearer '.$response['token']],
+            );
+            self::assertResponseIsSuccessful();
+            self::assertFileDoesNotExist($storedCvPath);
+            self::assertNull(static::getContainer()->get(CandidatureRepository::class)->find($candidature->getId()));
         } finally {
             if ($storedCvPath !== null && is_file($storedCvPath) && !unlink($storedCvPath)) {
                 throw new \RuntimeException('Could not remove the test CV.');
