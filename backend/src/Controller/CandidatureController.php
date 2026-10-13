@@ -20,7 +20,7 @@ final class CandidatureController extends AbstractController
 {
     #[Route(
         '/api/annonces/{id}/candidatures',
-        name: 'api_candidature_create',
+        name: 'api_candidatures_create',
         requirements: ['id' => '\d+'],
         methods: ['POST'],
     )]
@@ -99,7 +99,7 @@ final class CandidatureController extends AbstractController
         ], JsonResponse::HTTP_CREATED);
     }
 
-    #[Route('/annonce/{id}/candidatures', name: 'app_annonce_candidatures', requirements: ['id' => '\d+'], methods: ['GET'])]
+    #[Route('/api/annonces/{id}/candidatures', name: 'api_annonces_candidatures_index', requirements: ['id' => '\d+'], methods: ['GET'])]
     #[IsGranted('ROLE_ENTREPRISE')]
     public function showAnnonceCandidatures(
         int $id,
@@ -125,7 +125,7 @@ final class CandidatureController extends AbstractController
         ));
     }
 
-    #[Route('/annonce/{id}/candidatures/{candidatureId}', name: 'app_annonce_candidatures_{id}_{candidatureId}', requirements: ['id' => '\d+', 'candidatureId' => '\d+'], methods: ['GET'])]
+    #[Route('/api/annonces/{id}/candidatures/{candidatureId}', name: 'api_annonces_candidature_show', requirements: ['id' => '\d+', 'candidatureId' => '\d+'], methods: ['GET'])]
     #[IsGranted('ROLE_ENTREPRISE')]
     public function showAnnonceCandidature(
         int $id,
@@ -153,7 +153,7 @@ final class CandidatureController extends AbstractController
         return $this->json($this->formatCandidature($candidature), JsonResponse::HTTP_OK);
     }
 
-    #[Route('/annonce/{id}/candidatures/{candidatureId}', name: 'app_annonce_candidatures_{id}_{candidatureId}_delete', requirements: ['id' => '\d+', 'candidatureId' => '\d+'], methods: ['DELETE'])]
+    #[Route('/api/annonces/{id}/candidatures/{candidatureId}', name: 'api_annonces_candidature_delete', requirements: ['id' => '\d+', 'candidatureId' => '\d+'], methods: ['DELETE'])]
     #[IsGranted('ROLE_CANDIDAT')]
     public function deleteCandidature(
         int $id,
@@ -198,7 +198,7 @@ final class CandidatureController extends AbstractController
         return $this->json(['message' => 'Application deleted successfully'], JsonResponse::HTTP_OK);
     }
 
-    #[Route('/candidatures/{id}', name: 'app_candidatures_{id}', requirements: ['id' => '\d+'], methods: ['GET'])]
+    #[Route('/api/candidatures/{id}', name: 'api_candidatures_show', requirements: ['id' => '\d+'], methods: ['GET'])]
     #[IsGranted('ROLE_CANDIDAT')]
     public function showCandidature(
         int $id,
@@ -216,7 +216,7 @@ final class CandidatureController extends AbstractController
         return $this->json($this->formatCandidature($candidature), JsonResponse::HTTP_OK);
     }
 
-    #[Route('/candidatures', name: 'app_candidatures', methods: ['GET'])]
+    #[Route('/api/candidatures', name: 'api_candidatures_index', methods: ['GET'])]
     #[IsGranted('ROLE_CANDIDAT')]
     public function showCandidatures(
         CandidatureRepository $candidatureRepository,
