@@ -22,5 +22,4 @@ jobboard/
 ├── backend/            Symfony API
 ├── frontend/           React app
 ├── docs/               SQL schema if you want to look at it directly
-└── docker-compose.yml  spins up MariaDB, if you don't have it installed
 
