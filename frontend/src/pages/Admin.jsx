@@ -1,3 +1,172 @@
-import { useState } from 'react';
-const data={Offres:[['Développeur Fullstack React / Symfony','CDI','Lyon','Oui'],['Alternance Data Engineer','Alternance','Paris','Oui'],['Administrateur systèmes et réseaux','CDD','Rodez','Non'],['Product Designer','CDI','Paris','Oui']],Entreprises:[['Nexa Systems','Lyon','nexa.fr','Active'],['Orbis Data','Paris','orbis-data.fr','Active']],Personnes:[['Léa','Martin','lea.martin@mail.com','ROLE_USER'],['Hugo','Bernard','hugo.b@mail.com','ROLE_USER'],['Claire','Dubois','c.dubois@nexa.fr','ROLE_RECRUITER'],['Admin','JobBoard','admin@jobboard.fr','ROLE_ADMIN']],Candidatures:[['Léa Martin','Développeur Fullstack','12/10/2026','Nouvelle'],['Hugo Bernard','Data Engineer','10/10/2026','En cours']]};
-export default function Admin(){const [tab,setTab]=useState('Offres'),[query,setQuery]=useState(''),[items,setItems]=useState(data),[editing,setEditing]=useState(null);const columns={Offres:['Titre','Contrat','Ville','En ligne'],Entreprises:['Entreprise','Ville','Site','Statut'],Personnes:['Prénom / entreprise','Nom','Email','Rôle'],Candidatures:['Candidat','Offre','Date','Statut']};const rows=items[tab].filter(r=>r.join(' ').toLowerCase().includes(query.toLowerCase()));return <section className="container page-content"><h1 className="page-title">Administration</h1><div className="tabs">{Object.keys(data).map(t=><button key={t} className={`tab ${tab===t?'selected':''}`} onClick={()=>{setTab(t);setEditing(null)}}>{t}</button>)}</div><div className="admin-toolbar"><input value={query} onChange={e=>setQuery(e.target.value)} placeholder="Rechercher…"/><button className="btn btn-primary" onClick={()=>{setEditing({row:Array(columns[tab].length).fill(''),index:-1})}}>+ Nouveau</button></div>{editing&&<form className="panel edit-panel" onSubmit={e=>{e.preventDefault();setItems({...items,[tab]:editing.index<0?[...items[tab],editing.row]:items[tab].map((r,i)=>i===editing.index?editing.row:r)});setEditing(null)}}><h2>{editing.index<0?'Créer':'Modifier'} — {tab}</h2><div className="form-grid admin-fields">{columns[tab].map((c,i)=><label className="field" key={c}><span>{c}</span><input value={editing.row[i]||''} onChange={e=>setEditing({...editing,row:editing.row.map((v,j)=>j===i?e.target.value:v)})} required/></label>)}</div><div className="button-row"><button className="btn btn-primary">Enregistrer</button><button type="button" className="btn btn-light" onClick={()=>setEditing(null)}>Annuler</button></div></form>}<div className="table-wrap"><table><thead><tr>{columns[tab].map(c=><th key={c}>{c}</th>)}<th>Actions</th></tr></thead><tbody>{rows.map(row=>{const index=items[tab].indexOf(row);return <tr key={`${tab}-${index}`}>{row.map((v,i)=><td key={i}>{v}</td>)}<td className="table-actions"><button className="btn btn-light btn-small" onClick={()=>setEditing({row:[...row],index})}>Modifier</button><button className="btn btn-danger btn-small" onClick={()=>setItems({...items,[tab]:items[tab].filter((_,i)=>i!==index)})}>Supprimer</button></td></tr>})}</tbody></table>{rows.length===0&&<p className="empty">Aucun résultat.</p>}</div><div className="pagination"><button className="btn btn-light btn-small">← Précédent</button><span>Page 1 / 5</span><button className="btn btn-light btn-small">Suivant →</button></div></section>}
+import { useState } from "react";
+const data = {
+  Offres: [
+    ["Développeur Fullstack React / Symfony", "CDI", "Lyon", "Oui"],
+    ["Alternance Data Engineer", "Alternance", "Paris", "Oui"],
+    ["Administrateur systèmes et réseaux", "CDD", "Rodez", "Non"],
+    ["Product Designer", "CDI", "Paris", "Oui"],
+  ],
+  Entreprises: [
+    ["Nexa Systems", "Lyon", "nexa.fr", "Active"],
+    ["Orbis Data", "Paris", "orbis-data.fr", "Active"],
+  ],
+  Personnes: [
+    ["Léa", "Martin", "lea.martin@mail.com", "ROLE_USER"],
+    ["Hugo", "Bernard", "hugo.b@mail.com", "ROLE_USER"],
+    ["Claire", "Dubois", "c.dubois@nexa.fr", "ROLE_RECRUITER"],
+    ["Admin", "JobBoard", "admin@jobboard.fr", "ROLE_ADMIN"],
+  ],
+  Candidatures: [
+    ["Léa Martin", "Développeur Fullstack", "12/10/2026", "Nouvelle"],
+    ["Hugo Bernard", "Data Engineer", "10/10/2026", "En cours"],
+  ],
+};
+export default function Admin() {
+  const [tab, setTab] = useState("Offres"),
+    [query, setQuery] = useState(""),
+    [items, setItems] = useState(data),
+    [editing, setEditing] = useState(null);
+  const columns = {
+    Offres: ["Titre", "Contrat", "Ville", "En ligne"],
+    Entreprises: ["Entreprise", "Ville", "Site", "Statut"],
+    Personnes: ["Prénom / entreprise", "Nom", "Email", "Rôle"],
+    Candidatures: ["Candidat", "Offre", "Date", "Statut"],
+  };
+  const rows = items[tab].filter((r) =>
+    r.join(" ").toLowerCase().includes(query.toLowerCase()),
+  );
+  return (
+    <section className="container page-content">
+      <h1 className="page-title">Administration</h1>
+      <div className="tabs">
+        {Object.keys(data).map((t) => (
+          <button
+            key={t}
+            className={`tab ${tab === t ? "selected" : ""}`}
+            onClick={() => {
+              setTab(t);
+              setEditing(null);
+            }}
+          >
+            {t}
+          </button>
+        ))}
+      </div>
+      <div className="admin-toolbar">
+        <input
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="Rechercher…"
+        />
+        <button
+          className="btn btn-primary"
+          onClick={() => {
+            setEditing({ row: Array(columns[tab].length).fill(""), index: -1 });
+          }}
+        >
+          + Nouveau
+        </button>
+      </div>
+      {editing && (
+        <form
+          className="panel edit-panel"
+          onSubmit={(e) => {
+            e.preventDefault();
+            setItems({
+              ...items,
+              [tab]:
+                editing.index < 0
+                  ? [...items[tab], editing.row]
+                  : items[tab].map((r, i) =>
+                      i === editing.index ? editing.row : r,
+                    ),
+            });
+            setEditing(null);
+          }}
+        >
+          <h2>
+            {editing.index < 0 ? "Créer" : "Modifier"} — {tab}
+          </h2>
+          <div className="form-grid admin-fields">
+            {columns[tab].map((c, i) => (
+              <label className="field" key={c}>
+                <span>{c}</span>
+                <input
+                  value={editing.row[i] || ""}
+                  onChange={(e) =>
+                    setEditing({
+                      ...editing,
+                      row: editing.row.map((v, j) =>
+                        j === i ? e.target.value : v,
+                      ),
+                    })
+                  }
+                  required
+                />
+              </label>
+            ))}
+          </div>
+          <div className="button-row">
+            <button className="btn btn-primary">Enregistrer</button>
+            <button
+              type="button"
+              className="btn btn-light"
+              onClick={() => setEditing(null)}
+            >
+              Annuler
+            </button>
+          </div>
+        </form>
+      )}
+      <div className="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              {columns[tab].map((c) => (
+                <th key={c}>{c}</th>
+              ))}
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((row) => {
+              const index = items[tab].indexOf(row);
+              return (
+                <tr key={`${tab}-${index}`}>
+                  {row.map((v, i) => (
+                    <td key={i}>{v}</td>
+                  ))}
+                  <td className="table-actions">
+                    <button
+                      className="btn btn-light btn-small"
+                      onClick={() => setEditing({ row: [...row], index })}
+                    >
+                      Modifier
+                    </button>
+                    <button
+                      className="btn btn-danger btn-small"
+                      onClick={() =>
+                        setItems({
+                          ...items,
+                          [tab]: items[tab].filter((_, i) => i !== index),
+                        })
+                      }
+                    >
+                      Supprimer
+                    </button>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+        {rows.length === 0 && <p className="empty">Aucun résultat.</p>}
+      </div>
+      <div className="pagination">
+        <button className="btn btn-light btn-small">← Précédent</button>
+        <span>Page 1 / 5</span>
+        <button className="btn btn-light btn-small">Suivant →</button>
+      </div>
+    </section>
+  );
+}

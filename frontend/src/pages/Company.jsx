@@ -1,4 +1,188 @@
-import {useState} from 'react';import {Link} from 'react-router-dom';
-const offers=[['Développeur Fullstack React / Symfony','CDI','Lyon','En ligne'],['Product Designer','CDI','Paris','En ligne'],['Stagiaire QA','Stage','Lyon','Fermée']];const applicants=[['Léa Martin','lea.martin@mail.com','12/10/2026','Passionnée par le fullstack...','Nouvelle'],['Hugo Bernard','hugo.b@mail.com','10/10/2026','Disponible dès janvier.','En cours'],['Sofia Ramos','sofia.r@mail.com','09/10/2026','Je maîtrise React et PHP.','Nouvelle']];
-export default function Company(){const [statuses,setStatuses]=useState(applicants.map(a=>a[4])),[filter,setFilter]=useState('Toutes les offres'),[rows,setRows]=useState(offers);return <section className="container page-content"><div className="section-heading"><div><h1>Espace entreprise</h1><p className="muted">Nexa Systems · Lyon</p></div></div><div className="stats-grid"><Stat number={rows.filter(r=>r[3]==='En ligne').length} label="Offres en ligne"/><Stat number={rows.filter(r=>r[3]==='Fermée').length} label="Offres fermées"/><Stat number="14" label="Candidatures reçues"/><Stat number={statuses.filter(s=>s==='Nouvelle').length} label="À traiter"/></div><div className="section-heading"><h2>Mes offres</h2><Link className="btn btn-primary btn-small" to="/offre/nouvelle">+ Publier une offre</Link></div><div className="table-wrap"><table><thead><tr><th>Titre</th><th>Contrat</th><th>Ville</th><th>Statut</th><th>Actions</th></tr></thead><tbody>{rows.map((r,i)=><tr key={r[0]}><td>{r[0]}</td><td>{r[1]}</td><td>{r[2]}</td><td>{r[3]}</td><td className="table-actions"><button className="btn btn-light btn-small" onClick={()=>alert('Formulaire de modification à connecter à votre API.')}>Modifier</button><button className="btn btn-light btn-small" onClick={()=>setRows(rows.map((x,j)=>j===i?[x[0],x[1],x[2],x[3]==='Fermée'?'En ligne':'Fermée']:x))}>{r[3]==='Fermée'?'Rouvrir':'Fermer'}</button><button className="btn btn-danger btn-small" onClick={()=>setRows(rows.filter((_,j)=>j!==i))}>Supprimer</button></td></tr>)}</tbody></table></div><div className="section-heading table-title"><h2>Candidatures reçues</h2><select value={filter} onChange={e=>setFilter(e.target.value)}><option>Toutes les offres</option>{rows.map(r=><option key={r[0]}>{r[0]}</option>)}</select></div><div className="table-wrap"><table><thead><tr><th>Candidat</th><th>Contact</th><th>Date</th><th>Message</th><th>Statut</th></tr></thead><tbody>{applicants.map((a,i)=><tr key={a[0]}><td><strong>{a[0]}</strong></td><td>{a[1]}</td><td>{a[2]}</td><td>{a[3]}</td><td><select value={statuses[i]} onChange={e=>setStatuses(statuses.map((s,j)=>j===i?e.target.value:s))}><option>Nouvelle</option><option>En cours</option><option>Acceptée</option><option>Refusée</option></select></td></tr>)}</tbody></table></div><div className="pagination"><button className="btn btn-light btn-small">← Précédent</button><span>Page 1 / 2</span><button className="btn btn-light btn-small">Suivant →</button></div></section>}
-function Stat({number,label}){return <div className="stat panel"><strong>{number}</strong><span>{label}</span></div>}
+import { useState } from "react";
+import { Link } from "react-router-dom";
+const offers = [
+  ["Développeur Fullstack React / Symfony", "CDI", "Lyon", "En ligne"],
+  ["Product Designer", "CDI", "Paris", "En ligne"],
+  ["Stagiaire QA", "Stage", "Lyon", "Fermée"],
+];
+const applicants = [
+  [
+    "Léa Martin",
+    "lea.martin@mail.com",
+    "12/10/2026",
+    "Passionnée par le fullstack...",
+    "Nouvelle",
+  ],
+  [
+    "Hugo Bernard",
+    "hugo.b@mail.com",
+    "10/10/2026",
+    "Disponible dès janvier.",
+    "En cours",
+  ],
+  [
+    "Sofia Ramos",
+    "sofia.r@mail.com",
+    "09/10/2026",
+    "Je maîtrise React et PHP.",
+    "Nouvelle",
+  ],
+];
+export default function Company() {
+  const [statuses, setStatuses] = useState(applicants.map((a) => a[4])),
+    [filter, setFilter] = useState("Toutes les offres"),
+    [rows, setRows] = useState(offers);
+  return (
+    <section className="container page-content">
+      <div className="section-heading">
+        <div>
+          <h1>Espace entreprise</h1>
+          <p className="muted">Nexa Systems · Lyon</p>
+        </div>
+      </div>
+      <div className="stats-grid">
+        <Stat
+          number={rows.filter((r) => r[3] === "En ligne").length}
+          label="Offres en ligne"
+        />
+        <Stat
+          number={rows.filter((r) => r[3] === "Fermée").length}
+          label="Offres fermées"
+        />
+        <Stat number="14" label="Candidatures reçues" />
+        <Stat
+          number={statuses.filter((s) => s === "Nouvelle").length}
+          label="À traiter"
+        />
+      </div>
+      <div className="section-heading">
+        <h2>Mes offres</h2>
+        <Link className="btn btn-primary btn-small" to="/offre/nouvelle">
+          + Publier une offre
+        </Link>
+      </div>
+      <div className="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Titre</th>
+              <th>Contrat</th>
+              <th>Ville</th>
+              <th>Statut</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((r, i) => (
+              <tr key={r[0]}>
+                <td>{r[0]}</td>
+                <td>{r[1]}</td>
+                <td>{r[2]}</td>
+                <td>{r[3]}</td>
+                <td className="table-actions">
+                  <button
+                    className="btn btn-light btn-small"
+                    onClick={() =>
+                      alert(
+                        "Formulaire de modification à connecter à votre API.",
+                      )
+                    }
+                  >
+                    Modifier
+                  </button>
+                  <button
+                    className="btn btn-light btn-small"
+                    onClick={() =>
+                      setRows(
+                        rows.map((x, j) =>
+                          j === i
+                            ? [
+                                x[0],
+                                x[1],
+                                x[2],
+                                x[3] === "Fermée" ? "En ligne" : "Fermée",
+                              ]
+                            : x,
+                        ),
+                      )
+                    }
+                  >
+                    {r[3] === "Fermée" ? "Rouvrir" : "Fermer"}
+                  </button>
+                  <button
+                    className="btn btn-danger btn-small"
+                    onClick={() => setRows(rows.filter((_, j) => j !== i))}
+                  >
+                    Supprimer
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div className="section-heading table-title">
+        <h2>Candidatures reçues</h2>
+        <select value={filter} onChange={(e) => setFilter(e.target.value)}>
+          <option>Toutes les offres</option>
+          {rows.map((r) => (
+            <option key={r[0]}>{r[0]}</option>
+          ))}
+        </select>
+      </div>
+      <div className="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Candidat</th>
+              <th>Contact</th>
+              <th>Date</th>
+              <th>Message</th>
+              <th>Statut</th>
+            </tr>
+          </thead>
+          <tbody>
+            {applicants.map((a, i) => (
+              <tr key={a[0]}>
+                <td>
+                  <strong>{a[0]}</strong>
+                </td>
+                <td>{a[1]}</td>
+                <td>{a[2]}</td>
+                <td>{a[3]}</td>
+                <td>
+                  <select
+                    value={statuses[i]}
+                    onChange={(e) =>
+                      setStatuses(
+                        statuses.map((s, j) => (j === i ? e.target.value : s)),
+                      )
+                    }
+                  >
+                    <option>Nouvelle</option>
+                    <option>En cours</option>
+                    <option>Acceptée</option>
+                    <option>Refusée</option>
+                  </select>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div className="pagination">
+        <button className="btn btn-light btn-small">← Précédent</button>
+        <span>Page 1 / 2</span>
+        <button className="btn btn-light btn-small">Suivant →</button>
+      </div>
+    </section>
+  );
+}
+function Stat({ number, label }) {
+  return (
+    <div className="stat panel">
+      <strong>{number}</strong>
+      <span>{label}</span>
+    </div>
+  );
+}

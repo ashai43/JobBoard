@@ -1,13 +1,164 @@
-import { useMemo, useState } from 'react';
-import JobCard from './components/JobCard.jsx';
-const jobs=[
- {id:1,title:'Développeur Fullstack React / Symfony',company:'Nexa Systems',city:'Lyon',contract:'CDI',salary:'42 000 €',summary:"Rejoignez l'équipe produit pour construire notre plateforme de gestion de flotte.",description:"Vous concevez des interfaces React et des endpoints Symfony / API Platform, en lien avec l'équipe produit. Stack : React 19, Symfony 7, PostgreSQL, Docker.",date:'12/10/2026'},
- {id:2,title:'Alternance Data Engineer',company:'Orbis Data',city:'Paris',contract:'Alternance',summary:"Pipelines de données, SQL et Python au sein d'une équipe data de 12 personnes.",description:'Vous participez à la conception et à la maintenance de pipelines de données fiables.',date:'08/10/2026'},
- {id:3,title:'Administrateur systèmes et réseaux',company:'Lumio',city:'Rodez',contract:'CDD',salary:'2 300 €',summary:"Supervision, support N2 et automatisation de l'infrastructure.",description:'Vous maintenez les infrastructures et contribuez à leur sécurisation.',date:'30/09/2026'},
- {id:4,title:'Chef de projet digital',company:'Atelier Pixel',city:'Paris',contract:'CDI',summary:'Pilotez des projets web de la conception à la mise en production.',description:'Vous coordonnez les équipes créatives, techniques et les clients.',date:'22/09/2026'}
+import { useMemo, useState } from "react";
+import JobCard from "./components/JobCard.jsx";
+const jobs = [
+  {
+    id: 1,
+    title: "Développeur Fullstack React / Symfony",
+    company: "Nexa Systems",
+    city: "Lyon",
+    contract: "CDI",
+    salary: "42 000 €",
+    summary:
+      "Rejoignez l'équipe produit pour construire notre plateforme de gestion de flotte.",
+    description:
+      "Vous concevez des interfaces React et des endpoints Symfony / API Platform, en lien avec l'équipe produit. Stack : React 19, Symfony 7, PostgreSQL, Docker.",
+    date: "12/10/2026",
+  },
+  {
+    id: 2,
+    title: "Alternance Data Engineer",
+    company: "Orbis Data",
+    city: "Paris",
+    contract: "Alternance",
+    summary:
+      "Pipelines de données, SQL et Python au sein d'une équipe data de 12 personnes.",
+    description:
+      "Vous participez à la conception et à la maintenance de pipelines de données fiables.",
+    date: "08/10/2026",
+  },
+  {
+    id: 3,
+    title: "Administrateur systèmes et réseaux",
+    company: "Lumio",
+    city: "Rodez",
+    contract: "CDD",
+    salary: "2 300 €",
+    summary: "Supervision, support N2 et automatisation de l'infrastructure.",
+    description:
+      "Vous maintenez les infrastructures et contribuez à leur sécurisation.",
+    date: "30/09/2026",
+  },
+  {
+    id: 4,
+    title: "Chef de projet digital",
+    company: "Atelier Pixel",
+    city: "Paris",
+    contract: "CDI",
+    summary:
+      "Pilotez des projets web de la conception à la mise en production.",
+    description:
+      "Vous coordonnez les équipes créatives, techniques et les clients.",
+    date: "22/09/2026",
+  },
 ];
-export default function Home(){const [query,setQuery]=useState('développeur'),[city,setCity]=useState('Lyon'),[search,setSearch]=useState(false),[page,setPage]=useState(1),[message,setMessage]=useState('');const filtered=useMemo(()=>jobs.filter(j=>!search||(`${j.title} ${j.company} ${j.summary}`.toLowerCase().includes(query.toLowerCase())&&(!city||j.city.toLowerCase().includes(city.toLowerCase())))),[search,query,city]);
- const apply=job=>setMessage(`Votre candidature pour « ${job.title} » est prête. Connectez-vous pour la confirmer.`);
- return <><section className="hero"><div className="container"><h1>Trouvez le job qui vous correspond</h1><p>Des centaines d'offres en CDI, alternance, stage et freelance.</p><form className="search-bar" onSubmit={e=>{e.preventDefault();setSearch(true);setPage(1)}}><input aria-label="Métier recherché" value={query} onChange={e=>setQuery(e.target.value)} placeholder="Métier, compétence…"/><input aria-label="Ville" value={city} onChange={e=>setCity(e.target.value)} placeholder="Ville"/><button className="btn btn-primary" type="submit">Rechercher</button></form></div></section>
- <section className="container results"><div className="section-heading"><h2>{filtered.length} offre{filtered.length!==1?'s':''} trouvée{filtered.length!==1?'s':''}</h2><span className="muted">Page {page} / {Math.max(1,Math.ceil(filtered.length/3))}</span></div>{message&&<div className="notice">{message}<button onClick={()=>setMessage('')}>×</button></div>}{filtered.slice((page-1)*3,page*3).map(job=><JobCard key={job.id} job={job} onApply={apply}/>)}{filtered.length===0&&<div className="empty">Aucune offre ne correspond à votre recherche. Essayez une autre ville ou un autre métier.</div>}<Pagination page={page} setPage={setPage} total={Math.max(1,Math.ceil(filtered.length/3))}/></section></>}
-function Pagination({page,setPage,total}){return <div className="pagination"><button className="btn btn-light btn-small" disabled={page<=1} onClick={()=>setPage(page-1)}>← Précédent</button><span>Page {page} / {total}</span><button className="btn btn-light btn-small" disabled={page>=total} onClick={()=>setPage(page+1)}>Suivant →</button></div>}
+export default function Home() {
+  const [query, setQuery] = useState("développeur"),
+    [city, setCity] = useState("Lyon"),
+    [search, setSearch] = useState(false),
+    [page, setPage] = useState(1),
+    [message, setMessage] = useState("");
+  const filtered = useMemo(
+    () =>
+      jobs.filter(
+        (j) =>
+          !search ||
+          (`${j.title} ${j.company} ${j.summary}`
+            .toLowerCase()
+            .includes(query.toLowerCase()) &&
+            (!city || j.city.toLowerCase().includes(city.toLowerCase()))),
+      ),
+    [search, query, city],
+  );
+  const apply = (job) =>
+    setMessage(
+      `Votre candidature pour « ${job.title} » est prête. Connectez-vous pour la confirmer.`,
+    );
+  return (
+    <>
+      <section className="hero">
+        <div className="container">
+          <h1>Trouvez le job qui vous correspond</h1>
+          <p>Des centaines d'offres en CDI, alternance, stage et freelance.</p>
+          <form
+            className="search-bar"
+            onSubmit={(e) => {
+              e.preventDefault();
+              setSearch(true);
+              setPage(1);
+            }}
+          >
+            <input
+              aria-label="Métier recherché"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Métier, compétence…"
+            />
+            <input
+              aria-label="Ville"
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
+              placeholder="Ville"
+            />
+            <button className="btn btn-primary" type="submit">
+              Rechercher
+            </button>
+          </form>
+        </div>
+      </section>
+      <section className="container results">
+        <div className="section-heading">
+          <h2>
+            {filtered.length} offre{filtered.length !== 1 ? "s" : ""} trouvée
+            {filtered.length !== 1 ? "s" : ""}
+          </h2>
+          <span className="muted">
+            Page {page} / {Math.max(1, Math.ceil(filtered.length / 3))}
+          </span>
+        </div>
+        {message && (
+          <div className="notice">
+            {message}
+            <button onClick={() => setMessage("")}>×</button>
+          </div>
+        )}
+        {filtered.slice((page - 1) * 3, page * 3).map((job) => (
+          <JobCard key={job.id} job={job} onApply={apply} />
+        ))}
+        {filtered.length === 0 && (
+          <div className="empty">
+            Aucune offre ne correspond à votre recherche. Essayez une autre
+            ville ou un autre métier.
+          </div>
+        )}
+        <Pagination
+          page={page}
+          setPage={setPage}
+          total={Math.max(1, Math.ceil(filtered.length / 3))}
+        />
+      </section>
+    </>
+  );
+}
+function Pagination({ page, setPage, total }) {
+  return (
+    <div className="pagination">
+      <button
+        className="btn btn-light btn-small"
+        disabled={page <= 1}
+        onClick={() => setPage(page - 1)}
+      >
+        ← Précédent
+      </button>
+      <span>
+        Page {page} / {total}
+      </span>
+      <button
+        className="btn btn-light btn-small"
+        disabled={page >= total}
+        onClick={() => setPage(page + 1)}
+      >
+        Suivant →
+      </button>
+    </div>
+  );
+}

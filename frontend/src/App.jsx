@@ -1,13 +1,13 @@
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
-import Admin from './pages/Admin.jsx';
-import Candidate from './pages/Candidate.jsx';
-import Company from './pages/Company.jsx';
-import Home from './pages/Home.jsx';
-import Login from './pages/Login.jsx';
-import PublishOffer from './pages/PublishOffer.jsx';
-import Signup from './pages/Signup.jsx';
-import Footer from './pages/components/Footer.jsx';
-import Header from './pages/components/Header.jsx';
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import Admin from "./pages/Admin.jsx";
+import Candidate from "./pages/Candidate.jsx";
+import Company from "./pages/Company.jsx";
+import Home from "./pages/Home.jsx";
+import Login from "./pages/Login.jsx";
+import PublishOffer from "./pages/PublishOffer.jsx";
+import Signup from "./pages/Signup.jsx";
+import Footer from "./pages/components/Footer.jsx";
+import Header from "./pages/components/Header.jsx";
 
 export default function App() {
   return (

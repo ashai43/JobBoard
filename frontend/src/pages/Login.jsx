@@ -1,4 +1,41 @@
-import {useState} from 'react';
-import {Link,useNavigate} from 'react-router-dom';
-import FormField from './components/FormField.jsx';
-export default function Login(){const [email,setEmail]=useState('lea.martin@mail.com'),[password,setPassword]=useState('motdepasse'),[error,setError]=useState('');const navigate=useNavigate();return <section className="auth-wrap"><form className="panel auth-panel" onSubmit={e=>{e.preventDefault();if(email&&password)navigate('/candidat');else setError('Veuillez remplir tous les champs.')}}><h1>Connexion</h1><p className="muted">Accédez à votre espace</p><FormField label="Email" type="email" value={email} onChange={e=>setEmail(e.target.value)}/><FormField label="Mot de passe" type="password" value={password} onChange={e=>setPassword(e.target.value)}/>{error&&<p className="error">{error}</p>}<button className="btn btn-primary btn-block">Se connecter</button><p className="auth-foot">Pas encore de compte ? <Link to="/inscription">Inscription</Link></p></form></section>}
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import FormField from "./components/FormField.jsx";
+export default function Login() {
+  const [email, setEmail] = useState("lea.martin@mail.com"),
+    [password, setPassword] = useState("motdepasse"),
+    [error, setError] = useState("");
+  const navigate = useNavigate();
+  return (
+    <section className="auth-wrap">
+      <form
+        className="panel auth-panel"
+        onSubmit={(e) => {
+          e.preventDefault();
+          if (email && password) navigate("/candidat");
+          else setError("Veuillez remplir tous les champs.");
+        }}
+      >
+        <h1>Connexion</h1>
+        <p className="muted">Accédez à votre espace</p>
+        <FormField
+          label="Email"
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <FormField
+          label="Mot de passe"
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        {error && <p className="error">{error}</p>}
+        <button className="btn btn-primary btn-block">Se connecter</button>
+        <p className="auth-foot">
+          Pas encore de compte ? <Link to="/inscription">Inscription</Link>
+        </p>
+      </form>
+    </section>
+  );
+}

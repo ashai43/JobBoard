@@ -1,2 +1,88 @@
-import { useState } from 'react';import {Link,useNavigate} from 'react-router-dom';import FormField from './components/FormField.jsx';
-export default function PublishOffer(){const [f,setF]=useState({title:'Développeur Backend PHP',contract:'CDI',city:'Lyon',salary:'45000',hours:'39 h',summary:'Rejoignez notre équipe backend pour faire évoluer notre API.',description:''}),[error,setError]=useState('');const nav=useNavigate();const change=k=>e=>setF({...f,[k]:e.target.value});return <section className="container page-content"><h1 className="page-title">Espace entreprise</h1><form className="panel publish-panel" onSubmit={e=>{e.preventDefault();if(!f.description.trim()){setError('Cette valeur ne doit pas être vide.');return}setError('');alert('Offre enregistrée (démo locale).');nav('/entreprise')}}><h2>Publier une offre</h2><div className="form-grid title-contract"><FormField label="Titre" value={f.title} onChange={change('title')}/><label className="field"><span>Contrat</span><select value={f.contract} onChange={change('contract')}><option>CDI</option><option>CDD</option><option>Alternance</option><option>Stage</option><option>Freelance</option></select></label></div><div className="form-grid three"><FormField label="Ville" value={f.city} onChange={change('city')}/><FormField label="Salaire (optionnel)" required={false} value={f.salary} onChange={change('salary')}/><FormField label="Temps de travail" value={f.hours} onChange={change('hours')}/></div><label className="field"><span>Description courte (300 max)</span><textarea maxLength={300} value={f.summary} onChange={change('summary')} rows="2"/></label><label className="field"><span>Description complète</span><textarea value={f.description} onChange={change('description')} rows="5"/></label>{error&&<p className="error">{error}</p>}<div className="button-row"><button className="btn btn-primary">Enregistrer</button><Link className="btn btn-light" to="/entreprise">Annuler</Link></div></form></section>}
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import FormField from "./components/FormField.jsx";
+export default function PublishOffer() {
+  const [f, setF] = useState({
+      title: "Développeur Backend PHP",
+      contract: "CDI",
+      city: "Lyon",
+      salary: "45000",
+      hours: "39 h",
+      summary: "Rejoignez notre équipe backend pour faire évoluer notre API.",
+      description: "",
+    }),
+    [error, setError] = useState("");
+  const nav = useNavigate();
+  const change = (k) => (e) => setF({ ...f, [k]: e.target.value });
+  return (
+    <section className="container page-content">
+      <h1 className="page-title">Espace entreprise</h1>
+      <form
+        className="panel publish-panel"
+        onSubmit={(e) => {
+          e.preventDefault();
+          if (!f.description.trim()) {
+            setError("Cette valeur ne doit pas être vide.");
+            return;
+          }
+          setError("");
+          alert("Offre enregistrée (démo locale).");
+          nav("/entreprise");
+        }}
+      >
+        <h2>Publier une offre</h2>
+        <div className="form-grid title-contract">
+          <FormField label="Titre" value={f.title} onChange={change("title")} />
+          <label className="field">
+            <span>Contrat</span>
+            <select value={f.contract} onChange={change("contract")}>
+              <option>CDI</option>
+              <option>CDD</option>
+              <option>Alternance</option>
+              <option>Stage</option>
+              <option>Freelance</option>
+            </select>
+          </label>
+        </div>
+        <div className="form-grid three">
+          <FormField label="Ville" value={f.city} onChange={change("city")} />
+          <FormField
+            label="Salaire (optionnel)"
+            required={false}
+            value={f.salary}
+            onChange={change("salary")}
+          />
+          <FormField
+            label="Temps de travail"
+            value={f.hours}
+            onChange={change("hours")}
+          />
+        </div>
+        <label className="field">
+          <span>Description courte (300 max)</span>
+          <textarea
+            maxLength={300}
+            value={f.summary}
+            onChange={change("summary")}
+            rows="2"
+          />
+        </label>
+        <label className="field">
+          <span>Description complète</span>
+          <textarea
+            value={f.description}
+            onChange={change("description")}
+            rows="5"
+          />
+        </label>
+        {error && <p className="error">{error}</p>}
+        <div className="button-row">
+          <button className="btn btn-primary">Enregistrer</button>
+          <Link className="btn btn-light" to="/entreprise">
+            Annuler
+          </Link>
+        </div>
+      </form>
+    </section>
+  );
+}
