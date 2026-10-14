@@ -6,7 +6,6 @@ export default function Signup() {
       first: "Léa",
       last: "Martin",
       email: "lea.martin@mail.com",
-      phone: "06 12 34 56 78",
       password: "motdepasse",
       confirm: "",
     }),
@@ -42,12 +41,6 @@ export default function Signup() {
           type="email"
           value={form.email}
           onChange={change("email")}
-        />
-        <FormField
-          label="Téléphone"
-          type="tel"
-          value={form.phone}
-          onChange={change("phone")}
         />
         <FormField
           label="Mot de passe"

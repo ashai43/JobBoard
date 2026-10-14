@@ -14,6 +14,7 @@ export default function App() {
     <BrowserRouter>
       <Header />
       <main className="app-main">
+        {/* déclaration des routes de l'application */}
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/connexion" element={<Login />} />
