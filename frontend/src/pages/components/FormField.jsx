@@ -1,0 +1,1 @@
+export default function FormField({label, type='text', value, onChange, placeholder, required=true, ...props}) { return <label className="field"><span>{label}</span><input type={type} value={value} onChange={onChange} placeholder={placeholder} required={required} {...props}/></label> }
