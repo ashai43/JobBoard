@@ -36,17 +36,17 @@ final class CandidatureController extends AbstractController
     ): JsonResponse {
         $annonce = $annonceRepository->find($id);
         if ($annonce === null) {
-            return $this->json(['message' => 'Job offer not found.'], JsonResponse::HTTP_NOT_FOUND);
+            return $this->json(['message' => "Offre d'emploi introuvable."], JsonResponse::HTTP_NOT_FOUND);
         }
 
         $uploadedCv = $request->files->get('cv');
         if ($uploadedCv !== null && !$uploadedCv instanceof UploadedFile) {
-            return $this->json(['errors' => ['cv' => ['The CV must be an uploaded PDF file.']]], JsonResponse::HTTP_UNPROCESSABLE_ENTITY);
+            return $this->json(['errors' => ['cv' => ['Le CV doit être un fichier PDF valide.']]], JsonResponse::HTTP_UNPROCESSABLE_ENTITY);
         }
 
         $motivationLetter = $request->request->get('lettreMotivation');
         if ($motivationLetter !== null && !is_string($motivationLetter)) {
-            return $this->json(['errors' => ['lettreMotivation' => ['The motivation letter must be text.']]], JsonResponse::HTTP_UNPROCESSABLE_ENTITY);
+            return $this->json(['errors' => ['lettreMotivation' => ['La lettre de motivation doit être du texte.']]], JsonResponse::HTTP_UNPROCESSABLE_ENTITY);
         }
 
         $candidature = (new Candidature())
@@ -71,7 +71,7 @@ final class CandidatureController extends AbstractController
         $storedPath = null;
         if ($uploadedCv !== null) {
             if (!is_dir($cvDirectory) && !mkdir($cvDirectory, 0770, true) && !is_dir($cvDirectory)) {
-                throw new \RuntimeException(sprintf('Could not create CV storage directory "%s".', $cvDirectory));
+                throw new \RuntimeException(sprintf('Impossible de créer le dossier de stockage des CV.', $cvDirectory));
             }
 
             $storedFilename = bin2hex(random_bytes(16)).'.pdf';
@@ -86,7 +86,7 @@ final class CandidatureController extends AbstractController
             $entityManager->flush();
         } catch (\Throwable $exception) {
             if ($storedFilename !== null && $storedPath !== null && is_file($storedPath) && !unlink($storedPath)) {
-                throw new \RuntimeException('Could not remove the uploaded CV after the application failed to save.', previous: $exception);
+                throw new \RuntimeException("Impossible de supprimer le CV téléversé après l'échec de l'enregistrement de la candidature.", previous: $exception);
             }
 
             throw $exception;
@@ -109,12 +109,12 @@ final class CandidatureController extends AbstractController
     ): JsonResponse {
         $annonce = $annonceRepository->find($id);
         if (!$annonce) {
-            return new JsonResponse(['message' => 'Applications not found'], JsonResponse::HTTP_NOT_FOUND);
+            return new JsonResponse(['message' => 'Candidatures introuvables'], JsonResponse::HTTP_NOT_FOUND);
         }
 
         // vérification si l'utilisateur connecté est le propriétaire de l'annonce
         if ($annonce->getIdEntreprise()?->getCompteCandidat()?->getId() !== $candidat->getId()) {
-            return new JsonResponse(['message' => 'You are not allowed to view these applications.'], JsonResponse::HTTP_FORBIDDEN);
+            return new JsonResponse(['message' => "Vous n'êtes pas autorisé à consulter ces candidatures."], JsonResponse::HTTP_FORBIDDEN);
         }
 
         $candidatures = $candidatureRepository->findBy(['idAnnonce' => $annonce], ['id' => 'ASC']);
@@ -136,18 +136,18 @@ final class CandidatureController extends AbstractController
     ): JsonResponse {
         $annonce = $annonceRepository->find($id);
         if (!$annonce) {
-            return new JsonResponse(['message' => 'Application not found'], JsonResponse::HTTP_NOT_FOUND);
+            return new JsonResponse(['message' => 'Candidature introuvable'], JsonResponse::HTTP_NOT_FOUND);
         }
         // vérification si l'utilisateur connecté est le propriétaire de l'annonce
         if ($annonce->getIdEntreprise()?->getCompteCandidat()?->getId() !== $candidat->getId()) {
-            return new JsonResponse(['message' => 'You are not allowed to view this application.'], JsonResponse::HTTP_FORBIDDEN);
+            return new JsonResponse(['message' => "Vous n'êtes pas autorisé à consulter cette candidature."], JsonResponse::HTTP_FORBIDDEN);
         }
         $candidature = $candidatureRepository->findOneBy([
             'id' => $candidatureId,
             'idAnnonce' => $annonce,
         ]);
         if (!$candidature) {
-            return new JsonResponse(['message' => 'Application not found'], JsonResponse::HTTP_NOT_FOUND);
+            return new JsonResponse(['message' => 'Candidature introuvable'], JsonResponse::HTTP_NOT_FOUND);
         }
 
         return $this->json($this->formatCandidature($candidature), JsonResponse::HTTP_OK);
@@ -166,25 +166,25 @@ final class CandidatureController extends AbstractController
     ): JsonResponse {
         $annonce = $annonceRepository->find($id);
         if (!$annonce) {
-            return new JsonResponse(['message' => 'Application not found'], JsonResponse::HTTP_NOT_FOUND);
+            return new JsonResponse(['message' => 'Candidature introuvable'], JsonResponse::HTTP_NOT_FOUND);
         }
         $candidature = $candidatureRepository->findOneBy([
             'id' => $candidatureId,
             'idAnnonce' => $annonce,
         ]);
         if (!$candidature) {
-            return new JsonResponse(['message' => 'Application not found'], JsonResponse::HTTP_NOT_FOUND);
+            return new JsonResponse(['message' => 'Candidature introuvable'], JsonResponse::HTTP_NOT_FOUND);
         }
         // vérification si l'utilisateur connecté est le propriétaire de la candidature
         if ($candidature->getIdCandidat()?->getId() !== $candidat->getId()) {
-            return new JsonResponse(['message' => 'You are not allowed to delete this application.'], JsonResponse::HTTP_FORBIDDEN);
+            return new JsonResponse(['message' => "Vous n'êtes pas autorisé à supprimer cette candidature."], JsonResponse::HTTP_FORBIDDEN);
         }
         $cvFilename = $candidature->getCv();
         $cvPath = null;
         if ($cvFilename !== null) {
             $cvPath = $cvDirectory.DIRECTORY_SEPARATOR.$cvFilename;
             if (basename($cvFilename) !== $cvFilename || is_link($cvPath)) {
-                throw new \RuntimeException('The stored CV filename is invalid.');
+                throw new \RuntimeException('Le nom du fichier CV enregistré est invalide.');
             }
         }
 
@@ -192,10 +192,10 @@ final class CandidatureController extends AbstractController
         $entityManager->flush();
 
         if ($cvPath !== null && is_file($cvPath) && !unlink($cvPath)) {
-            throw new \RuntimeException(sprintf('Could not delete the stored CV "%s".', $cvPath));
+            throw new \RuntimeException(sprintf('Impossible de supprimer le fichier CV enregistré « %s ».', $cvPath));
         }
 
-        return $this->json(['message' => 'Application deleted successfully'], JsonResponse::HTTP_OK);
+        return $this->json(['message' => 'Candidature supprimée avec succès'], JsonResponse::HTTP_OK);
     }
 
     #[Route('/api/candidatures/{id}', name: 'api_candidatures_show', requirements: ['id' => '\d+'], methods: ['GET'])]
@@ -207,11 +207,11 @@ final class CandidatureController extends AbstractController
     ): JsonResponse {
         $candidature = $candidatureRepository->find($id);
         if (!$candidature) {
-            return new JsonResponse(['message' => 'Application not found'], JsonResponse::HTTP_NOT_FOUND);
+            return new JsonResponse(['message' => 'Candidature introuvable'], JsonResponse::HTTP_NOT_FOUND);
         }
         // vérification si l'utilisateur connecté est le propriétaire de la candidature
         if ($candidature->getIdCandidat()?->getId() !== $candidat->getId()) {
-            return new JsonResponse(['message' => 'You are not allowed to view this application.'], JsonResponse::HTTP_FORBIDDEN);
+            return new JsonResponse(['message' => "Vous n'êtes pas autorisé à consulter cette candidature."], JsonResponse::HTTP_FORBIDDEN);
         }
         return $this->json($this->formatCandidature($candidature), JsonResponse::HTTP_OK);
     }

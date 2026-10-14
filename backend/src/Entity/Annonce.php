@@ -21,7 +21,7 @@ class Annonce
     #[Assert\NotBlank()]
     #[Assert\Length(
         min: 2,
-        minMessage: 'The title must be at least 2 characters long.',
+        minMessage: 'Le titre doit comporter au moins 2 caractères.',
     )]
     #[Assert\NoSuspiciousCharacters]
     private ?string $titre = null;
@@ -30,7 +30,7 @@ class Annonce
     #[Assert\NoSuspiciousCharacters]
     #[Assert\Length(
         min: 10,
-        minMessage: 'The description must be at least 10 characters long.',
+        minMessage: 'La description doit comporter au moins 10 caractères.',
     )]
     private ?string $description = null;
 
@@ -38,14 +38,14 @@ class Annonce
     #[Assert\NoSuspiciousCharacters]
     #[Assert\Length(
         min: 2,
-        minMessage: 'The location must be at least 2 characters long.',
+        minMessage: 'Le lieu doit comporter au moins 2 caractères.',
     )]
     private ?string $lieu = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2, nullable: true)]
     #[Assert\Regex(
         pattern: '/^\d+(\.\d+)?$/',
-        message: 'The salary must be a valid number.',
+        message: 'Le salaire doit être un nombre valide.',
     )]
     private ?string $salaire = null;
 

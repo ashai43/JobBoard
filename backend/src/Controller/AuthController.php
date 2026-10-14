@@ -24,7 +24,7 @@ final class AuthController extends AbstractController
     ): JsonResponse {
         $email = trim($request->email);
         if ($candidatRepository->findOneBy(['email' => $email]) !== null) {
-            return $this->json(['message' => 'An account with this email already exists.'], 409);
+            return $this->json(['message' => 'Un compte associé à cette adresse e-mail existe déjà.'], 409);
         }
 
         $candidat = (new Candidat())
@@ -46,7 +46,7 @@ final class AuthController extends AbstractController
 
     #[OA\Post(
         path: '/api/login',
-        summary: 'Authenticate a candidate and return a JWT.',
+        summary: 'Authentifie un candidat et renvoie un jeton JWT.',
         requestBody: new OA\RequestBody(
             required: true,
             content: new OA\JsonContent(
@@ -60,19 +60,19 @@ final class AuthController extends AbstractController
         responses: [
             new OA\Response(
                 response: 200,
-                description: 'Authentication successful.',
+                description: 'Authentification réussie.',
                 content: new OA\JsonContent(
                     properties: [
                         new OA\Property(property: 'token', type: 'string'),
                     ]
                 )
             ),
-            new OA\Response(response: 401, description: 'Invalid credentials.'),
+            new OA\Response(response: 401, description: 'Identifiants invalides.'),
         ]
     )]
     #[Route('/api/login', name: 'api_login', methods: ['POST'])]
     public function loginCheck(): JsonResponse
     {
-        return $this->json(['message' => 'Invalid credentials.'], 401);
+        return $this->json(['message' => 'Identifiants invalides.'], 401);
     }
 }

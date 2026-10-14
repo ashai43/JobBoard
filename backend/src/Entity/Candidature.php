@@ -26,7 +26,7 @@ class Candidature
     #[Assert\NotBlank()]
     #[Assert\Choice(
         choices: ['pending', 'accepted', 'refused'],
-        message: 'Choose a valid status.'
+        message: 'Veuillez choisir un statut valide.'
     )]
     private ?string $statut = null;
 
@@ -39,14 +39,14 @@ class Candidature
     #[Assert\File(
         maxSize: '1024k',
         extensions: ['pdf'],
-        extensionsMessage: 'Please upload a valid PDF',
+        extensionsMessage: 'Veuillez téléverser un fichier PDF valide.',
     )]
     private ?string $cv = null;
 
     #[Assert\File(
         maxSize: '1024k',
         extensions: ['pdf'],
-        extensionsMessage: 'Please upload a valid PDF',
+        extensionsMessage: 'Veuillez téléverser un fichier PDF valide.',
     )]
     private ?UploadedFile $cvFile = null;
 

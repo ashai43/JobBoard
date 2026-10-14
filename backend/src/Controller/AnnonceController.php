@@ -28,7 +28,7 @@ final class AnnonceController extends AbstractController
     {
         $annonce = $annonceRepository->find($id);
         if (!$annonce) {
-            return new JsonResponse(['message' => 'Annonce not found'], 404);
+            return new JsonResponse(['message' => 'Annonce introuvable'], 404);
         }
         return new JsonResponse($annonce, 200);
     }

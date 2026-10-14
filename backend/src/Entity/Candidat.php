@@ -25,11 +25,11 @@ class Candidat implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\NoSuspiciousCharacters]
     #[Assert\Regex(
         pattern: '/^[a-zA-ZÀ-ÿ\- ]+$/',
-        message: 'Only letters are allowed in the name field.'
+        message: 'Le nom ne doit contenir que des lettres.'
     )]
     #[Assert\Length(
         min: 2,
-        minMessage: 'The name must be at least 2 characters long.',
+        minMessage: 'Le nom doit comporter au moins 2 caractères.',
     )]
     private ?string $nom = null;
 
@@ -38,11 +38,11 @@ class Candidat implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\NoSuspiciousCharacters]
     #[Assert\Regex(
         pattern: '/^[a-zA-ZÀ-ÿ\- ]+$/',
-        message: 'Only letters are allowed in the firstname field.'
+        message: 'Le prénom ne doit contenir que des lettres.'
     )]
     #[Assert\Length(
         min: 2,
-        minMessage: 'The firstname must be at least 2 characters long.',
+        minMessage: 'Le prénom doit comporter au moins 2 caractères.',
     )]
     private ?string $prenom = null;
 
@@ -116,7 +116,7 @@ class Candidat implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getUserIdentifier(): string
     {
-        return $this->email ?? throw new \LogicException('A candidate must have an email address.');
+        return $this->email ?? throw new \LogicException("Un candidat doit avoir une adresse e-mail.");
     }
 
     public function getRoles(): array

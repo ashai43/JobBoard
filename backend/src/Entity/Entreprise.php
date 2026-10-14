@@ -23,11 +23,11 @@ class Entreprise
     #[Assert\NoSuspiciousCharacters]
     #[Assert\Regex(
         pattern: '/^[a-zA-ZÀ-ÿ\- ]+$/',
-        message: 'Only letters are allowed in the name field.'
+        message: 'Le nom ne doit contenir que des lettres.'
     )]
     #[Assert\Length(
         min: 2,
-        minMessage: 'The name must be at least 2 characters long.',
+        minMessage: 'Le nom doit comporter au moins 2 caractères.',
     )]
     private ?string $nom = null;
 
@@ -35,11 +35,11 @@ class Entreprise
     #[Assert\NoSuspiciousCharacters]
     #[Assert\Regex(
         pattern: '/^[\p{L}\p{M}\p{N}\p{P}\p{S}\p{Zs}]+$/u',
-        message: 'The address contains unsupported characters.'
+        message: "L'adresse contient des caractères non pris en charge."
     )]
     #[Assert\Length(
         min: 2,
-        minMessage: 'The address must be at least 2 characters long.',
+        minMessage: "L'adresse doit comporter au moins 2 caractères.",
     )]
     private ?string $adresse = null;
 
