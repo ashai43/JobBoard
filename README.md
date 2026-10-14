@@ -12,7 +12,7 @@ MariaDB for the database
 
 
 
-Symfony 7.4 + API Platform 4 for the REST API (JWT auth)
+Symfony 8.1 for the REST API (JWT auth)
 
 
 
@@ -22,5 +22,4 @@ jobboard/
 ├── backend/            Symfony API
 ├── frontend/           React app
 ├── docs/               SQL schema if you want to look at it directly
-└── docker-compose.yml  spins up MariaDB, if you don't have it installed
 
