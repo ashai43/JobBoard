@@ -12,7 +12,7 @@ MariaDB for the database
 
 
 
-Symfony 7.4 + API Platform 4 for the REST API (JWT auth)
+Symfony 8.1 for the REST API (JWT auth)
 
 
 
